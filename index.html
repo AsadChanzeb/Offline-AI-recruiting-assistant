@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CVLens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f5f0;
+  --sidebar: #ffffff;
+  --card: #ffffff;
+  --ink: #1a1a1a;
+  --mute: #8c8c8c;
+  --line: #e8e8e3;
+  --acc: #e8740c;
+  --acc2: #cc6400;
+  --acc-bg: #fef5ec;
+  --acc-light: #fff8f0;
+  --ok: #2f9e5a;
+  --bad: #d94432;
+  --radius: 12px;
+  --sidebar-w: 260px;
+}
+
+* { box-sizing: border-box; margin: 0 }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.6 'Inter', system-ui, -apple-system, sans-serif;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.sidebar-logo {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #e8740c 0%, #f5a623 100%);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.sidebar-logo::after {
+  content: '';
+  width: 14px; height: 14px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  position: relative;
+}
+.sidebar-logo::before {
+  content: '';
+  position: absolute;
+  width: 3px; height: 7px;
+  background: #fff;
+  right: 6px; bottom: 5px;
+  transform: rotate(-45deg);
+  border-radius: 1px;
+}
+.brand-text { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; }
+.brand-sub { font-size: 11px; color: var(--mute); font-weight: 400; }
+
+.nav-section { padding: 14px 12px 6px; }
+.nav-label {
+  font-size: 11px; font-weight: 600; color: var(--mute);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 6px 12px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  color: var(--ink); text-decoration: none;
+  font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: background 0.15s;
+  border: none; background: none; width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: var(--acc-bg); }
+.nav-item.active { background: var(--acc-bg); color: var(--acc); font-weight: 600; }
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto; font-size: 10px; font-weight: 700;
+  background: var(--acc); color: #fff;
+  padding: 1px 7px; border-radius: 10px;
+}
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding: 12px;
+}
+.sidebar-status {
+  font-size: 12px; padding: 8px 12px;
+  border-radius: 8px; background: var(--acc-bg);
+  display: flex; align-items: center; gap: 6px;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--mute); flex-shrink: 0;
+}
+.status-dot.on { background: var(--ok); }
+.status-dot.off { background: var(--bad); }
+
+/* ===== MAIN AREA ===== */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 28px 32px 40px;
+  max-width: 1100px;
+}
+.page-title {
+  font-size: 24px; font-weight: 700; letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+.page-sub { color: var(--mute); font-size: 14px; margin-bottom: 24px; }
+
+/* Sections - only the active one is visible */
+.section { display: none; }
+.section.active { display: block; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.card h3 {
+  font-size: 16px; font-weight: 700; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card h3 svg { color: var(--acc); width: 18px; height: 18px; }
+
+/* Feature cards row */
+.feature-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 110px;
+}
+.feature-card:hover {
+  border-color: var(--acc);
+  box-shadow: 0 4px 16px rgba(232,116,12,0.1);
+  transform: translateY(-2px);
+}
+.feature-card .icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--acc-bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.feature-card .icon svg { color: var(--acc); width: 20px; height: 20px; }
+.feature-card .title { font-weight: 600; font-size: 14px; }
+.feature-card .desc { font-size: 12px; color: var(--mute); line-height: 1.4; }
+
+/* ===== FORM ELEMENTS ===== */
+textarea, input[type=text], input[type=number], select {
+  width: 100%;
+  font: inherit; font-size: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  transition: border 0.2s;
+}
+textarea:focus, input[type=text]:focus, select:focus {
+  border-color: var(--acc);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232,116,12,0.12);
+}
+textarea { resize: vertical; }
+
+button {
+  font: 500 14px 'Inter', system-ui, sans-serif;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--acc);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+button:hover { background: var(--acc2); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+button.ghost {
+  background: none; color: var(--acc);
+  border: 1px solid var(--acc);
+  padding: 6px 14px; font-size: 13px;
+}
+button.ghost:hover { background: var(--acc-bg); }
+button.danger {
+  background: none; color: var(--bad);
+  border: 1px solid var(--bad);
+  font-size: 13px; padding: 6px 14px;
+}
+button.danger:hover { background: #fbeae7; }
+:focus-visible { outline: 3px solid rgba(232,116,12,0.4); outline-offset: 2px; }
+
+.row {
+  display: flex; gap: 10px; align-items: center;
+  margin-top: 12px; flex-wrap: wrap;
+}
+.row > input[type=text] { flex: 1; min-width: 180px; }
+.row > select { width: auto; }
+
+/* ===== DROP ZONE ===== */
+.drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--mute);
+  cursor: pointer;
+  background: #fafaf8;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+.drop:hover, .drop.over {
+  border-color: var(--acc);
+  background: var(--acc-light);
+  color: var(--acc2);
+}
+.drop svg { width: 24px; height: 24px; color: var(--acc); flex-shrink: 0; }
+
+/* ===== CV LIST ===== */
+ul { list-style: none; padding: 0; margin: 14px 0 0; }
+li {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px; margin: 4px 0;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fafaf8;
+  transition: background 0.15s;
+}
+li:hover { background: var(--acc-light); }
+li small, .mute { color: var(--mute); }
+li button.del-btn {
+  background: none; color: var(--mute);
+  padding: 2px 8px; font-size: 16px;
+  border-radius: 4px;
+}
+li button.del-btn:hover { color: var(--bad); background: #fbeae7; }
+
+/* ===== DETAILS / PASTE ===== */
+details { margin-top: 14px; }
+summary {
+  cursor: pointer; color: var(--acc);
+  font-weight: 500; font-size: 13px;
+}
+details input, details textarea { margin: 8px 0; }
+
+/* ===== RESULTS ===== */
+.res { margin-top: 16px; }
+.cand {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  background: #fafaf8;
+}
+.top {
+  display: flex; justify-content: space-between;
+  align-items: baseline; gap: 10px;
+}
+.top b { font-size: 15px; font-weight: 700; }
+.bar {
+  height: 6px; background: var(--line);
+  border-radius: 3px; margin: 8px 0;
+}
+.bar span {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--acc), #f5a623);
+  border-radius: 3px;
+}
+.snip {
+  font-size: 13px; color: var(--mute);
+  white-space: pre-wrap; line-height: 1.5;
+}
+.why {
+  margin-top: 10px; padding: 14px;
+  background: var(--acc-light);
+  border-left: 3px solid var(--acc);
+  border-radius: 0 8px 8px 0;
+  white-space: pre-wrap;
+  font-size: 13px;
+}
+
+/* ===== TABLES ===== */
+table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+td, th {
+  text-align: left; padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+}
+th { font-size: 12px; font-weight: 600; color: var(--mute); text-transform: uppercase; letter-spacing: 0.5px; }
+
+#msg { margin-top: 10px; font-size: 13px; color: var(--mute); }
+.err { color: var(--bad); }
+
+/* ===== EXPLORER ===== */
+.filters {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  align-items: center; margin-top: 12px;
+}
+.filters input[type=number] { width: 64px; padding: 6px 8px; }
+.filters select { width: auto; padding: 6px 8px; }
+.filters label { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+
+.chips {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  align-items: center; margin-top: 10px;
+}
+.chip {
+  background: #fff; color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 99px; padding: 4px 12px;
+  font-weight: 500; font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.chip small { color: var(--mute); }
+.chip:hover { background: var(--acc-light); border-color: var(--acc); }
+.chip.jd { border-color: var(--acc); }
+.chip.on { background: var(--acc); color: #fff; border-color: var(--acc); }
+.chip.on small { color: rgba(255,255,255,0.7); }
+
+span.tag {
+  display: inline-block;
+  background: var(--acc-bg); border-radius: 99px;
+  padding: 3px 10px; font-size: 12px;
+  margin: 2px;
+}
+span.tag.jd { background: var(--acc); color: #fff; }
+
+#tbl th { padding: 8px 10px; }
+#tbl th button {
+  background: none; color: var(--mute);
+  padding: 0; font-weight: 700; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+#tbl th button:hover { color: var(--acc); }
+#tbl tr.r { cursor: pointer; transition: background 0.1s; }
+#tbl tr.r:hover, #tbl tr.r:focus-visible { background: var(--acc-light); }
+#tbl td { vertical-align: top; font-size: 13px; }
+
+.mb {
+  height: 5px; background: var(--line);
+  border-radius: 3px; margin-bottom: 3px; min-width: 60px;
+}
+.mb span {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--acc), #f5a623);
+  border-radius: 3px;
+}
+.det { display: grid; gap: 10px; font-size: 13px; padding: 8px 0; }
+.weights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 8px; margin-top: 8px;
+}
+.weights label { font-size: 13px; }
+
+/* ===== CTA BANNER ===== */
+.banner {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.banner-icon {
+  width: 44px; height: 44px;
+  background: var(--acc-bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.banner-icon svg { color: var(--acc); width: 22px; height: 22px; }
+.banner-text { flex: 1; }
+.banner-text b { display: block; font-size: 14px; }
+.banner-text span { font-size: 12px; color: var(--mute); }
+
+/* ===== PILL ===== */
+.pill {
+  font-size: 12px; padding: 4px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  color: var(--mute);
+}
+.pill.on { color: var(--ok); border-color: var(--ok); }
+.pill.off { color: var(--bad); border-color: var(--bad); }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width: 860px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 16px; }
+  .feature-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo"></div>
+    <div>
+      <div class="brand-text">CVLens</div>
+      <div class="brand-sub">Local CV Matching</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <button class="nav-item active" data-nav="overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Overview
+    </button>
+    <button class="nav-item" data-nav="mycvs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      My CVs
+      <span class="nav-badge" id="cvBadge" style="display:none">0</span>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">AI Features</div>
+    <button class="nav-item" data-nav="match">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      Job Match
+    </button>
+    <button class="nav-item" data-nav="explorer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Candidate Explorer
+    </button>
+    <button class="nav-item" data-nav="askpage">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      AI Assistant
+    </button>
+    <button class="nav-item" data-nav="benchmark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      Benchmark
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="st" style="font-size:12px;color:var(--mute)">checking Ollama…</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main">
+
+  <!-- ===== OVERVIEW ===== -->
+  <div class="section active" id="sec-overview">
+    <h1 class="page-title" id="greeting">Welcome to CVLens</h1>
+    <p class="page-sub">Upload CVs, match them to jobs, and ask questions — all locally with Ollama.</p>
+
+    <div class="feature-row">
+      <div class="feature-card" data-goto="mycvs">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="title">Upload CVs</div>
+        <div class="desc">Add PDF, DOCX or text CVs to build your candidate pool.</div>
+      </div>
+      <div class="feature-card" data-goto="match">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </div>
+        <div class="title">Match a Job</div>
+        <div class="desc">Paste a job description and rank candidates by semantic similarity.</div>
+      </div>
+      <div class="feature-card" data-goto="explorer">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="title">Explore Candidates</div>
+        <div class="desc">Sort and filter by experience, education, skills and research.</div>
+      </div>
+      <div class="feature-card" data-goto="askpage">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="title">AI Assistant</div>
+        <div class="desc">Ask questions about your candidates using hybrid RAG search.</div>
+      </div>
+    </div>
+
+    <div class="banner">
+      <div class="banner-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="banner-text">
+        <b>Powered by Ollama — 100% local</b>
+        <span>Your CVs never leave your machine. Embeddings with nomic-embed-text, generation with llama3.2.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MY CVs ===== -->
+  <div class="section" id="sec-mycvs">
+    <h1 class="page-title">My CVs</h1>
+    <p class="page-sub">Upload and manage your candidate CVs.</p>
+
+    <div class="card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload CVs
+      </h3>
+      <label class="drop" id="drop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Drop PDF, DOCX or TXT files here, or click to choose
+        <input id="files" type="file" multiple accept=".pdf,.docx,.txt" hidden>
+      </label>
+      <details>
+        <summary>Paste a CV instead</summary>
+        <input id="pname" type="text" placeholder="Candidate name">
+        <textarea id="ptext" rows="5" placeholder="Paste CV text"></textarea>
+        <button id="padd">Add pasted CV</button>
+      </details>
+      <div id="msg"></div>
+    </div>
+
+    <div class="card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Uploaded CVs
+      </h3>
+      <ul id="cvs"></ul>
+      <button id="clearall" class="danger" hidden>🗑 Remove all CVs</button>
+    </div>
+  </div>
+
+  <!-- ===== JOB MATCH ===== -->
+  <div class="section" id="sec-match">
+    <h1 class="page-title">Job Match</h1>
+    <p class="page-sub">Paste a job description and rank your candidates by similarity.</p>
+
+    <div class="card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="8" x2="22" y2="8"/></svg>
+        Job Description
+      </h3>
+      <textarea id="jd" rows="6" placeholder="Paste the job description here…"></textarea>
+      <div class="row">
+        <select id="algo" aria-label="Search algorithm">
+          <option value="hnsw">HNSW</option>
+          <option value="kd">KD-Tree</option>
+          <option value="brute">Brute force</option>
+        </select>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px">
+          <input type="checkbox" id="blind"> Blind mode
+        </label>
+        <button id="go">Rank candidates</button>
+      </div>
+      <div class="res" id="res"></div>
+    </div>
+  </div>
+
+  <!-- ===== CANDIDATE EXPLORER ===== -->
+  <div class="section" id="sec-explorer">
+    <h1 class="page-title">Candidate Explorer</h1>
+    <p class="page-sub">Experience, education, research and skills extracted from each CV. Sort, filter, and click a row for details.</p>
+
+    <div class="card">
+      <div class="row" id="presets" style="margin-top:0"></div>
+      <div class="filters">
+        <label>Min experience <input id="fyears" type="number" min="0" max="40" value="0"> yrs</label>
+        <label>Education <select id="fedu"><option value="0">Any</option><option value="1">Diploma+</option><option value="2">Bachelor's+</option><option value="3">Master's+</option><option value="4">PhD</option></select></label>
+        <label><input type="checkbox" id="fres"> Has research</label>
+      </div>
+      <div class="chips" id="fskills"></div>
+      <div class="mute" id="count" style="margin-top:14px"></div>
+      <div style="overflow-x:auto"><table id="tbl"></table></div>
+    </div>
+  </div>
+
+  <!-- ===== AI ASSISTANT ===== -->
+  <div class="section" id="sec-askpage">
+    <h1 class="page-title">AI Assistant</h1>
+    <p class="page-sub">Ask natural-language questions about your candidates using hybrid RAG search.</p>
+
+    <div class="card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Ask your CVs
+      </h3>
+      <div class="row" style="margin-top:0">
+        <input id="q" type="text" placeholder="Who has deployed a RAG pipeline?">
+        <button id="ask">Ask</button>
+      </div>
+      <div class="res" id="ans"></div>
+    </div>
+  </div>
+
+  <!-- ===== BENCHMARK ===== -->
+  <div class="section" id="sec-benchmark">
+    <h1 class="page-title">Search Speed</h1>
+    <p class="page-sub">Run the same query through all three algorithms and compare recall vs. latency.</p>
+
+    <div class="card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Compare Algorithms
+      </h3>
+      <p class="mute" style="margin:0 0 12px">Checks how many of the exact top 10 each algorithm finds.</p>
+      <button id="bm">Run Benchmark</button>
+      <div id="bmres"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+/* ===== Navigation ===== */
+function navigate(page) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('sec-' + page);
+  if (sec) sec.classList.add('active');
+  const nav = document.querySelector('.nav-item[data-nav="' + page + '"]');
+  if (nav) nav.classList.add('active');
+}
+document.querySelectorAll('.nav-item[data-nav]').forEach(b =>
+  b.onclick = () => navigate(b.dataset.nav));
+document.querySelectorAll('.feature-card[data-goto]').forEach(c =>
+  c.onclick = () => navigate(c.dataset.goto));
+
+/* ===== Greeting ===== */
+(function() {
+  const h = new Date().getHours();
+  const g = h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening';
+  document.getElementById('greeting').textContent = g + '!';
+})();
+
+/* ===== Core helpers ===== */
+const $ = s => document.querySelector(s);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function api(p, b, m) {
+  const r = await fetch(p, {method: m || (b ? 'POST' : 'GET'), headers: {'Content-Type': 'application/json'}, body: b ? JSON.stringify(b) : undefined});
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || ('Error ' + r.status));
+  return j;
+}
+function say(t, bad) { $('#msg').innerHTML = bad ? '<span class="err">' + esc(t) + '</span>' : esc(t); }
+async function busy(btn, fn) { btn.disabled = true; try { await fn(); } catch(e) { alert(e.message); } finally { btn.disabled = false; } }
+
+/* ===== Status ===== */
+async function status() {
+  try {
+    const s = await api('/status');
+    const ok = s.ollama && s.embed && s.gen;
+    const dot = $('#statusDot');
+    dot.className = 'status-dot ' + (ok ? 'on' : 'off');
+    const el = $('#st');
+    el.textContent = !s.ollama ? 'Ollama offline' : !s.embed ? 'Missing embed model' : !s.gen ? 'Missing gen model' : 'Ready · ' + s.cvs + ' CVs · ' + s.chunks + ' chunks';
+    el.style.color = ok ? 'var(--ok)' : 'var(--bad)';
+    const badge = $('#cvBadge');
+    if (s.cvs > 0) { badge.style.display = ''; badge.textContent = s.cvs; }
+    else badge.style.display = 'none';
+  } catch(e) {}
+}
+
+/* ===== CV List ===== */
+async function list() {
+  const a = await api('/cv/list');
+  $('#clearall').hidden = !a.length;
+  $('#cvs').innerHTML = a.length
+    ? a.map(c => `<li><span><b>${esc(c.name)}</b> <small>${c.chunks} chunks</small></span><button class="del-btn" title="Remove ${esc(c.name)}" aria-label="Remove ${esc(c.name)}" data-id="${c.id}">×</button></li>`).join('')
+    : '<li class="mute" style="border:none;background:none">No CVs yet. Upload some to get started.</li>';
+  document.querySelectorAll('#cvs button').forEach(b => b.onclick = async () => { await api('/cv/delete/' + b.dataset.id, null, 'DELETE'); refresh(); });
+}
+const refresh = () => { list(); status(); loadCand(); };
+
+/* ===== File reading ===== */
+async function pdfText(f) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const d = await pdfjsLib.getDocument({data: await f.arrayBuffer()}).promise;
+  let t = '';
+  for (let i = 1; i <= d.numPages; i++) { t += (await (await d.getPage(i)).getTextContent()).items.map(x => x.str).join(' ') + '\n'; }
+  return t;
+}
+async function readFile(f) {
+  const n = f.name.toLowerCase();
+  if (n.endsWith('.pdf')) return pdfText(f);
+  if (n.endsWith('.docx')) return (await mammoth.extractRawText({arrayBuffer: await f.arrayBuffer()})).value;
+  return f.text();
+}
+async function addFiles(files) {
+  for (const f of files) {
+    say('Reading ' + f.name + '…');
+    try {
+      const t = await readFile(f);
+      if (t.trim().length < 50) { say(f.name + ': no text found. Scanned PDFs need OCR.', 1); continue; }
+      say('Embedding ' + f.name + ' (first run is slower)…');
+      await api('/cv/add', {name: f.name.replace(/\.[^.]+$/, ''), text: t});
+    } catch(e) { say(f.name + ': ' + e.message, 1); return; }
+  }
+  say('Done.');
+  refresh();
+}
+$('#files').onchange = e => addFiles([...e.target.files]);
+const dz = $('#drop');
+dz.ondragover = e => { e.preventDefault(); dz.classList.add('over'); };
+dz.ondragleave = () => dz.classList.remove('over');
+dz.ondrop = e => { e.preventDefault(); dz.classList.remove('over'); addFiles([...e.dataTransfer.files]); };
+$('#padd').onclick = () => busy($('#padd'), async () => {
+  await api('/cv/add', {name: $('#pname').value || 'Pasted CV', text: $('#ptext').value});
+  $('#ptext').value = ''; $('#pname').value = ''; refresh();
+});
+
+/* ===== Match results ===== */
+let last = [];
+const nm = r => $('#blind').checked ? 'Candidate #' + r.cv : r.name;
+function show() {
+  $('#res').innerHTML = last.length ? last.map((r, i) =>
+    `<div class="cand"><div class="top"><b>${i + 1}. ${esc(nm(r))}</b><span>${r.score}% similar</span></div>
+    <div class="bar"><span style="width:${Math.max(0, Math.min(100, r.score))}%"></span></div><div class="snip">${esc(r.snippet)}…</div>
+    <button class="ghost" data-cv="${r.cv}" style="margin-top:8px">Why this match?</button><div class="why" hidden></div></div>`
+  ).join('') : '';
+  document.querySelectorAll('.cand .ghost').forEach(b => b.onclick = () => busy(b, async () => {
+    const w = b.nextElementSibling; w.hidden = false; w.textContent = 'Thinking…';
+    try { w.textContent = (await api('/explain', {jd: $('#jd').value, cv: +b.dataset.cv})).text; } catch(e) { w.textContent = e.message; }
+  }));
+}
+$('#blind').onchange = () => { show(); draw(); };
+$('#go').onclick = () => busy($('#go'), async () => {
+  if (!$('#jd').value.trim()) return alert('Paste a job description first.');
+  const r = await api('/match', {jd: $('#jd').value, algo: $('#algo').value, k: 60});
+  MS = {}; r.results.forEach(x => MS[x.cv] = x.score);
+  last = r.results.slice(0, 8); show(); await loadCand();
+  sortK = 'm'; sortD = -1; draw();
+  if (!last.length) $('#res').innerHTML = '<p class="mute">No CVs to rank yet.</p>';
+  else $('#res').insertAdjacentHTML('afterbegin', '<p class="mute">' + esc(r.algo.toUpperCase()) + ' searched in ' + Math.round(r.us) + ' µs</p>');
+});
+
+/* ===== Ask ===== */
+$('#ask').onclick = () => busy($('#ask'), async () => {
+  if (!$('#q').value.trim()) return;
+  $('#ans').innerHTML = '<p class="mute">Searching CVs and asking llama3.2…</p>';
+  try {
+    const r = await api('/ask', {question: $('#q').value});
+    $('#ans').innerHTML = '<div class="why">' + esc(r.answer) + '</div>' + r.sources.map(s =>
+      `<p class="snip"><b>${esc($('#blind').checked ? 'Candidate' : s.name)}</b> · ${s.score}%<br>${esc(s.snippet)}…</p>`
+    ).join('');
+  } catch(e) { $('#ans').innerHTML = '<p class="err">' + esc(e.message) + '</p>'; }
+});
+
+/* ===== Benchmark ===== */
+$('#bm').onclick = () => busy($('#bm'), async () => {
+  const r = await api('/benchmark', {text: $('#jd').value || 'software engineer with machine learning experience'});
+  const L = {brute: 'Brute force (exact)', kd: 'KD-Tree (exact)', hnsw: 'HNSW (approximate)'};
+  $('#bmres').innerHTML = '<table><tr><th>Algorithm</th><th>Time per search</th><th>Exact top-10 found</th></tr>' +
+    r.rows.map(x => `<tr><td>${L[x.algo]}</td><td>${x.us.toFixed(0)} µs</td><td>${Math.round(x.recall * 100)}%</td></tr>`).join('') +
+    '</table><p class="mute">Over ' + r.chunks + ' chunks. Gaps widen as you add more CVs.</p>';
+});
+
+/* ===== Candidate explorer ===== */
+let CAND = [], JDS = [], MS = {}, sortK = 'years', sortD = -1, need = new Set(), openIds = new Set();
+const EDUN = ['-', 'Diploma', "Bachelor's", "Master's", 'PhD'];
+const COLS = [['name', 'Candidate'], ['m', 'Job match'], ['years', 'Experience'], ['edu', 'Education'], ['research', 'Research'], ['skl', 'Skills']];
+$('#presets').innerHTML = [['Most experienced', 'years'], ['Highest education', 'edu'], ['Most research', 'research'], ['Best job match', 'm']].map(p =>
+  `<button class="ghost" data-k="${p[1]}">${p[0]}</button>`
+).join('') + '<button class="ghost" id="reset">Reset filters</button>';
+document.querySelectorAll('#presets button[data-k]').forEach(b => b.onclick = () => { sortK = b.dataset.k; sortD = -1; draw(); });
+$('#reset').onclick = () => { $('#fyears').value = 0; $('#fedu').value = 0; $('#fres').checked = false; need.clear(); chips(); draw(); };
+['#fyears', '#fedu', '#fres'].forEach(s => $(s).oninput = draw);
+const nameOf = c => $('#blind').checked ? 'Candidate #' + c.id : c.name;
+const sk = c => JDS.length ? c.matched.length : c.skills.length;
+
+async function loadCand() {
+  try {
+    const r = await api('/candidates', {jd: $('#jd').value});
+    CAND = r.candidates; JDS = r.jd_skills;
+    need = new Set([...need].filter(s => CAND.some(c => c.skills.includes(s))));
+    chips(); draw();
+  } catch(e) { console.error(e); }
+}
+
+function chips() {
+  const f = {};
+  CAND.forEach(c => c.skills.forEach(s => f[s] = (f[s] || 0) + 1));
+  const ks = Object.keys(f).sort((a, b) => (JDS.includes(b) - JDS.includes(a)) || f[b] - f[a]).slice(0, 18);
+  $('#fskills').innerHTML = ks.length
+    ? '<span class="mute">Must have:</span>' + ks.map(s =>
+        `<button class="chip${need.has(s) ? ' on' : ''}${JDS.includes(s) ? ' jd' : ''}" data-s="${esc(s)}" aria-pressed="${need.has(s)}">${esc(s)} <small>${f[s]}</small></button>`
+      ).join('')
+    : '';
+  document.querySelectorAll('#fskills .chip').forEach(b => b.onclick = () => {
+    const s = b.dataset.s; need.has(s) ? need.delete(s) : need.add(s); chips(); draw();
+  });
+}
+
+const bar = (f, t) => `<div class="mb"><span style="width:${Math.round(Math.max(0, Math.min(1, f)) * 100)}%"></span></div>${t}`;
+
+function draw() {
+  const mY = Math.max(1, ...CAND.map(c => c.years));
+  const mR = Math.max(1, ...CAND.map(c => c.research));
+  const mv = Object.values(MS), lo = Math.min(...mv), hi = Math.max(...mv);
+  const val = (c, k) => k === 'name' ? nameOf(c).toLowerCase() : k === 'skl' ? sk(c) : k === 'm' ? (MS[c.id] ?? -1) : c[k];
+  const rows = CAND.filter(c =>
+    c.years >= (+$('#fyears').value || 0) &&
+    c.edu >= +$('#fedu').value &&
+    (!$('#fres').checked || c.research > 0) &&
+    [...need].every(s => c.skills.includes(s))
+  );
+  rows.sort((a, b) => sortD * ((val(a, sortK) > val(b, sortK)) - (val(a, sortK) < val(b, sortK))) || b.years - a.years);
+  $('#count').textContent = CAND.length
+    ? `Showing ${rows.length} of ${CAND.length} candidates` + (mv.length ? '' : ' · rank a job above to fill the Job match column')
+    : 'Add CVs to see candidates here.';
+  const hd = COLS.map(([k, l]) =>
+    `<th aria-sort="${k === sortK ? (sortD < 0 ? 'descending' : 'ascending') : 'none'}"><button data-k="${k}">${l}${k === sortK ? (sortD < 0 ? ' ▼' : ' ▲') : ''}</button></th>`
+  ).join('');
+  const body = rows.map(c => {
+    let h = `<tr class="r" tabindex="0" data-id="${c.id}"><td><b>${esc(nameOf(c))}</b></td><td>${MS[c.id] == null ? '–' : bar((MS[c.id] - lo) / ((hi - lo) || 1), MS[c.id] + '%')}</td>
+      <td>${bar(c.years / mY, c.years + ' yrs')}</td><td>${bar(c.edu / 4, EDUN[c.edu])}</td><td>${c.research ? bar(c.research / mR, c.research) : '–'}</td>
+      <td>${JDS.length ? bar(c.matched.length / JDS.length, c.matched.length + '/' + JDS.length + ' required') : c.skills.length + ' found'}</td></tr>`;
+    if (openIds.has(c.id)) h += `<tr><td colspan="6"><div class="det"><div><b>Education:</b> ${esc(c.edu_line || 'not detected')}</div><div><b>Research:</b> ${c.research_tags.length ? esc(c.research_tags.join(', ')) : 'none detected'}</div>
+      <div class="chips" style="margin:0">${c.skills.map(s => `<span class="tag${JDS.includes(s) ? ' jd' : ''}">${esc(s)}</span>`).join('')}</div>
+      <div><button class="ghost" data-why="${c.id}">Why this match?</button><div class="why" hidden></div></div></div></td></tr>`;
+    return h;
+  }).join('');
+  $('#tbl').innerHTML = '<tr>' + hd + '</tr>' + (body || '<tr><td colspan="6" class="mute">No candidates match these filters.</td></tr>');
+  document.querySelectorAll('#tbl th button').forEach(b => b.onclick = () => {
+    const k = b.dataset.k; sortD = k === sortK ? -sortD : (k === 'name' ? 1 : -1); sortK = k; draw();
+  });
+  document.querySelectorAll('#tbl tr.r').forEach(r => {
+    const t = () => { const i = +r.dataset.id; openIds.has(i) ? openIds.delete(i) : openIds.add(i); draw(); };
+    r.onclick = t; r.onkeydown = e => { if (e.key === 'Enter') t(); };
+  });
+  document.querySelectorAll('#tbl [data-why]').forEach(b => b.onclick = () => busy(b, async () => {
+    if (!$('#jd').value.trim()) return alert('Paste a job description first.');
+    const w = b.nextElementSibling; w.hidden = false; w.textContent = 'Thinking…';
+    try { w.textContent = (await api('/explain', {jd: $('#jd').value, cv: +b.dataset.why})).text; } catch(e) { w.textContent = e.message; }
+  }));
+}
+
+/* ===== Clear all ===== */
+$('#clearall').onclick = () => busy($('#clearall'), async () => {
+  const n = (await api('/cv/list')).length;
+  if (!n || !confirm(`Remove all ${n} CVs? This cannot be undone.`)) return;
+  await api('/cv/clear', {});
+  CAND = []; JDS = []; MS = {}; need.clear(); openIds.clear(); last = [];
+  $('#res').innerHTML = ''; $('#ans').innerHTML = ''; $('#bmres').innerHTML = '';
+  say('All CVs removed.'); refresh();
+});
+
+/* ===== Init ===== */
+refresh();
+setInterval(status, 8000);
+</script>
+</body>
+</html>
