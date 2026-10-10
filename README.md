@@ -30,62 +30,65 @@
 
 ## 📸 Interface Tour & Screenshots
 
-<!-- Screenshot showcase section: Drop PNG images into docs/screenshots/ to update previews -->
-
-> [!TIP]
-> **To add or update your screenshots:** Replace the placeholder PNG files in [`docs/screenshots/`](./docs/screenshots/) using the filenames listed below. The README will automatically display your live screenshots!
+<!-- Space reserved for page screenshots. Upload or paste your images below: -->
 
 ### 1. Overview & Recruiter Dashboard
 > Real-time system health check, Ollama connection status, candidate pool metrics, and quick-launch action cards.
 
-<p align="center">
-  <img src="docs/screenshots/01-overview.png" alt="Overview Dashboard" width="900">
-</p>
+<!-- Paste Overview screenshot here -->
+<!-- e.g. ![Overview Dashboard](image-url) -->
+
+<br>
 
 ---
 
 ### 2. My CVs — Ingestion & Resume Parsing
 > Multi-format resume ingestion (PDF, DOCX, TXT) via client-side parsers or direct paste. Resumes are automatically tokenized, chunked with contextual overlap, and vectorized.
 
-<p align="center">
-  <img src="docs/screenshots/02-upload-cvs.png" alt="My CVs & Upload Management" width="900">
-</p>
+<!-- Paste My CVs screenshot here -->
+<!-- e.g. ![My CVs & Upload Management](image-url) -->
+
+<br>
 
 ---
 
 ### 3. Job Match & Explainable Candidate Ranking
 > Paste any job description to rank your candidate pool by similarity score. Features **Blind Review Mode** to mitigate unconscious hiring bias, plus LLM-generated rationale highlighting strengths and candidate gaps.
 
-<p align="center">
-  <img src="docs/screenshots/03-job-match.png" alt="Job Match & Candidate Ranking" width="900">
-</p>
+<!-- Paste Job Match screenshot here -->
+<!-- e.g. ![Job Match & Candidate Ranking](image-url) -->
+
+<br>
 
 ---
 
 ### 4. Candidate Explorer & Attribute Filtering
 > Structured candidate profiles extracted without ML dependencies. Filter dynamically across years of experience, minimum education degree, verified skills, and academic research publications.
 
-<p align="center">
-  <img src="docs/screenshots/04-candidate-explorer.png" alt="Candidate Explorer" width="900">
-</p>
+<!-- Paste Candidate Explorer screenshot here -->
+<!-- e.g. ![Candidate Explorer](image-url) -->
+
+<br>
 
 ---
 
 ### 5. AI Assistant — Hybrid RAG Q&A
 > Conversational recruiter assistant powered by hybrid retrieval (HNSW dense embeddings + BM25 sparse keywords). Questions cite specific candidates with factual grounding.
 
-<p align="center">
-  <img src="docs/screenshots/05-ai-assistant.png" alt="AI Recruiting Assistant" width="900">
-</p>
+<!-- Paste AI Assistant screenshot here -->
+<!-- e.g. ![AI Recruiting Assistant](image-url) -->
+
+<br>
 
 ---
 
 ### 6. Algorithm Benchmark & Telemetry
 > Live performance benchmark executing the same query against HNSW, KD-Tree, and Brute-force indices to compare recall accuracy and latency in milliseconds.
 
-<p align="center">
-  <img src="docs/screenshots/06-benchmark.png" alt="Search Algorithm Benchmark" width="900">
-</p>
+<!-- Paste Algorithm Benchmark screenshot here -->
+<!-- e.g. ![Search Algorithm Benchmark](image-url) -->
+
+<br>
 
 ---
 
@@ -238,15 +241,6 @@ Offline-AI-recruiting-assistant/
 ├── LICENSE                 # MIT License
 ├── README.md               # Project documentation and visual guides
 ├── cvlens_db.json          # Local persistence database (git-ignored)
-├── docs/
-│   └── screenshots/        # UI screenshots & preview assets
-│       ├── README.md       # Asset upload instructions
-│       ├── 01-overview.png
-│       ├── 02-upload-cvs.png
-│       ├── 03-job-match.png
-│       ├── 04-candidate-explorer.png
-│       ├── 05-ai-assistant.png
-│       └── 06-benchmark.png
 └── tests/
     └── test_core.py        # Unit tests for vector math, chunking, BM25, and candidate profiling
 ```
