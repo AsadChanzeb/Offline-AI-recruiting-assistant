@@ -35,8 +35,8 @@
 ### 1. Overview & Recruiter Dashboard
 > Real-time system health check, Ollama connection status, candidate pool metrics, and quick-launch action cards.
 
-<!-- Paste Overview screenshot here -->
-<!-- e.g. ![Overview Dashboard](image-url) -->
+<img width="3760" height="1730" alt="1" src="https://github.com/user-attachments/assets/55ca4c7c-c3bc-4ea8-bf9a-cf133835871c" />
+
 
 <br>
 
@@ -45,8 +45,8 @@
 ### 2. My CVs — Ingestion & Resume Parsing
 > Multi-format resume ingestion (PDF, DOCX, TXT) via client-side parsers or direct paste. Resumes are automatically tokenized, chunked with contextual overlap, and vectorized.
 
-<!-- Paste My CVs screenshot here -->
-<!-- e.g. ![My CVs & Upload Management](image-url) -->
+<img width="3727" height="1730" alt="2" src="https://github.com/user-attachments/assets/a309e801-f34f-47ec-bdf9-7c4c3ff11d7d" />
+
 
 <br>
 
@@ -55,8 +55,8 @@
 ### 3. Job Match & Explainable Candidate Ranking
 > Paste any job description to rank your candidate pool by similarity score. Features **Blind Review Mode** to mitigate unconscious hiring bias, plus LLM-generated rationale highlighting strengths and candidate gaps.
 
-<!-- Paste Job Match screenshot here -->
-<!-- e.g. ![Job Match & Candidate Ranking](image-url) -->
+<img width="3727" height="1730" alt="3" src="https://github.com/user-attachments/assets/7d1125bf-d998-4ef4-b3c1-ac07a369f884" />
+
 
 <br>
 
@@ -65,8 +65,8 @@
 ### 4. Candidate Explorer & Attribute Filtering
 > Structured candidate profiles extracted without ML dependencies. Filter dynamically across years of experience, minimum education degree, verified skills, and academic research publications.
 
-<!-- Paste Candidate Explorer screenshot here -->
-<!-- e.g. ![Candidate Explorer](image-url) -->
+<img width="3765" height="1732" alt="6" src="https://github.com/user-attachments/assets/f2f8bf46-76dc-4998-864c-e66b33a5c7dd" />
+
 
 <br>
 
@@ -74,9 +74,8 @@
 
 ### 5. AI Assistant — Hybrid RAG Q&A
 > Conversational recruiter assistant powered by hybrid retrieval (HNSW dense embeddings + BM25 sparse keywords). Questions cite specific candidates with factual grounding.
+<img width="3712" height="1725" alt="5" src="https://github.com/user-attachments/assets/68e063a4-40aa-4bf8-b58b-246310e9e5f6" />
 
-<!-- Paste AI Assistant screenshot here -->
-<!-- e.g. ![AI Recruiting Assistant](image-url) -->
 
 <br>
 
@@ -85,8 +84,7 @@
 ### 6. Algorithm Benchmark & Telemetry
 > Live performance benchmark executing the same query against HNSW, KD-Tree, and Brute-force indices to compare recall accuracy and latency in milliseconds.
 
-<!-- Paste Algorithm Benchmark screenshot here -->
-<!-- e.g. ![Search Algorithm Benchmark](image-url) -->
+<img width="3767" height="1727" alt="7" src="https://github.com/user-attachments/assets/973839ef-34ca-4beb-bac6-2836ac67ef39" />
 
 <br>
 
