@@ -247,7 +247,7 @@ Offline-AI-recruiting-assistant/
 
 ## 🔒 Privacy & Security First
 
-- **Zero Cloud Leakage:** All embeddings, vector operations, and LLM text generation occur on `128.0.0.1` / `localhost`.
+- **Zero Cloud Leakage:** All embeddings, vector operations, and LLM text generation occur locally on `127.0.0.1` / `localhost`.
 - **Candidate Confidentiality:** Fully compliant with strict data protection and GDPR policies—no resume data is sent to external AI APIs.
 - **Auditable Algorithms:** Every ranking calculation and search index is fully inspectable in pure Python.
 
